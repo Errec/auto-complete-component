@@ -31,9 +31,9 @@ export const AutocompleteInput: React.FC = () => {
   }
 
   const handleSelectProduct = (product: Product) => {
-    setInputValue(product.title)
     setSelectedProducts([product])
-    setShowDropdown(false)
+    setInputValue('')  // Clear the input
+    setShowDropdown(false)  // Hide the dropdown
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
