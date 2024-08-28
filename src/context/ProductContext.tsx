@@ -1,47 +1,48 @@
-import React, { createContext, useCallback, useState } from 'react'
-import { Product } from '../types/Product'
+import React, { createContext, useCallback, useState } from 'react';
+import { searchProducts as apiSearchProducts } from '../services/api';
+import { Product } from '../types/Product';
 
 interface ProductContextType {
-  products: Product[]
-  selectedProducts: Product[]
-  searchProducts: (query: string) => Promise<void>
-  setSelectedProducts: (products: Product[]) => void
+  products: Product[];
+  selectedProducts: Product[];
+  searchProducts: (query: string) => Promise<void>;
+  setSelectedProducts: (products: Product[]) => void;
+  isLoading: boolean;
+  error: string | null;
 }
 
-export const ProductContext = createContext<ProductContextType | undefined>(undefined)
+export const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [products, setProducts] = useState<Product[]>([])
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([])
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const searchProducts = useCallback(async (query: string) => {
+    setIsLoading(true);
+    setError(null);
     try {
-      const response = await fetch(`https://fakestoreapi.com/products?limit=20`)
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-      const data = await response.json()
-      const filteredProducts = data.filter((product: Product) =>
-        product.title.toLowerCase().includes(query.toLowerCase())
-      )
-      setProducts(filteredProducts)
-    } catch (error) {
-      console.error('Error fetching products:', error)
-      setProducts([])
-      throw error
+      const results = await apiSearchProducts(query);
+      setProducts(results);
+    } catch (err) {
+      setError('Failed to fetch products. Please try again.');
+      setProducts([]);
+    } finally {
+      setIsLoading(false);
     }
-  }, [])
-
-  const value = {
-    products,
-    selectedProducts,
-    searchProducts,
-    setSelectedProducts
-  }
+  }, []);
 
   return (
-    <ProductContext.Provider value={value}>
+    <ProductContext.Provider value={{ 
+      products, 
+      selectedProducts, 
+      searchProducts, 
+      setSelectedProducts,
+      isLoading,
+      error
+    }}>
       {children}
     </ProductContext.Provider>
-  )
-}
+  );
+};
