@@ -1,50 +1,91 @@
-# React + TypeScript + Vite
+# Product Search Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a React-based product search application that allows users to search for products using an autocomplete input. The application uses the Fake Store API to fetch product data.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Autocomplete search input
+- Product list display with pagination
+- Responsive design
+- Keyboard navigation support
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Node.js (v14 or later)
+- npm (v6 or later)
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/product-search-app.git
+   cd product-search-app
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+## Running the Application
+
+To start the development server:
+
+```
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+The application will be available at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Running Storybook
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+To start Storybook:
+
 ```
+npm run storybook
+```
+
+Storybook will be available at `http://localhost:6006`.
+
+## Running Tests
+
+To run tests:
+
+```
+npm test
+```
+
+To run tests in watch mode:
+
+```
+npm run test:watch
+```
+
+## API Information
+
+This application uses the [Fake Store API](https://fakestoreapi.com/) to fetch product data. The API provides mock data for an e-commerce website, including product information such as title, price, description, and image URLs.
+
+Key endpoints used:
+
+- `GET /products`: Fetch all products
+- `GET /products?limit=<number>`: Fetch a limited number of products
+
+For more information about the API, visit the [Fake Store API documentation](https://fakestoreapi.com/docs).
+
+## Project Structure
+
+The project follows the Atomic Design methodology:
+
+- `src/components/atoms`: Basic building blocks (e.g., Input, ProductImage)
+- `src/components/molecules`: Combinations of atoms (e.g., AutocompleteInput)
+- `src/components/organisms`: Combinations of molecules and atoms (e.g., ResultsList)
+- `src/components/templates`: Page layouts
+- `src/styles`: Global styles and variables
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).

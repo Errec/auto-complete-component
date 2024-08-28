@@ -1,16 +1,31 @@
-import type { Preview } from "@storybook/react";
+import type { StorybookConfig } from "@storybook/react-vite";
 
-const preview: Preview = {
-  parameters: {
-    controls: {
-      matchers: {
-        color: /(background|color)$/i,
-        date: /Date$/i,
-      },
-    },
+const config: StorybookConfig = {
+  stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+
+  addons: [
+    "@storybook/addon-onboarding",
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@chromatic-com/storybook",
+    "@storybook/addon-interactions",
+  ],
+
+  framework: {
+    name: "@storybook/react-vite",
+    options: {},
   },
 
-  tags: ["autodocs"]
+  docs: {
+    autodocs: "tag",
+  },
+
+  typescript: {
+    reactDocgen: "react-docgen-typescript"
+  },
+
+  // Add this line to specify the preview file
+  previewMainTemplate: ".storybook/preview.tsx",
 };
 
-export default preview;
+export default config;
