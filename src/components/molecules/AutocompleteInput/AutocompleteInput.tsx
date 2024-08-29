@@ -9,7 +9,7 @@ import './AutocompleteInput.scss';
 export const AutocompleteInput: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null); // Change to null initially
   const { products, searchProducts, setSelectedProducts, isLoading, error } = useProductContext();
   const dropdownRef = useRef<HTMLUListElement>(null);
 
@@ -27,7 +27,7 @@ export const AutocompleteInput: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-    setSelectedIndex(-1);
+    setSelectedIndex(null); // Reset selection
   };
 
   const handleSelectProduct = (product: Product | Product[]) => {
@@ -43,16 +43,27 @@ export const AutocompleteInput: React.FC = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev < products.length - 1 ? prev + 1 : prev));
+      setSelectedIndex((prev) => {
+        const nextIndex = prev === null ? 0 : Math.min(prev + 1, products.length - 1);
+        if (dropdownRef.current && dropdownRef.current.children[nextIndex]) {
+          dropdownRef.current.children[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        return nextIndex;
+      });
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev > -1 ? prev - 1 : -1));
+      setSelectedIndex((prev) => {
+        const nextIndex = prev === 0 ? null : prev === null ? null : prev - 1;
+        if (nextIndex !== null && dropdownRef.current && dropdownRef.current.children[nextIndex]) {
+          dropdownRef.current.children[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        return nextIndex;
+      });
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (selectedIndex >= 0 && selectedIndex < products.length) {
+      if (selectedIndex !== null && selectedIndex >= 0 && selectedIndex < products.length) {
         handleSelectProduct(products[selectedIndex]);
       } else {
-        // Select all products if none are highlighted
         handleSelectProduct(products);
       }
     } else if (e.key === 'Escape') {

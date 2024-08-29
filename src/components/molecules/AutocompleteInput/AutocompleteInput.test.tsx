@@ -3,6 +3,9 @@ import { ProductContext } from '../../../context/ProductContext';
 import { Product } from '../../../types/Product';
 import { AutocompleteInput } from './AutocompleteInput';
 
+// Mocking scrollIntoView since it's not implemented in the test environment
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
+
 const mockProducts: Product[] = [
   { id: 1, title: 'Product 1', price: 10, description: 'Description 1', category: 'Category 1', image: 'image1.jpg' },
   { id: 2, title: 'Product 2', price: 20, description: 'Description 2', category: 'Category 2', image: 'image2.jpg' },

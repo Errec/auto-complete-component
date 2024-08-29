@@ -1,30 +1,28 @@
 # Product Search Application
 
-This is a React-based product search application that allows users to search for products using an autocomplete input. The application uses the Fake Store API to fetch product data.
-
-## Features
-
-- Autocomplete search input
-- Product list display with pagination
-- Responsive design
-- Keyboard navigation support
+A React-based product search application with autocomplete functionality.
 
 ## Prerequisites
 
 - Node.js (v14 or later)
-- npm (v6 or later)
+- npm (v6 or later) or Yarn (v1.22 or later)
 
 ## Installation
 
-1. Clone the repository:
+1. Clone or download the project to your local machine.
+
+2. Navigate to the project directory:
    ```
-   git clone https://github.com/yourusername/product-search-app.git
-   cd product-search-app
+   cd product-search-application
    ```
 
-2. Install dependencies:
+3. Install dependencies:
    ```
    npm install
+   ```
+   or if using Yarn:
+   ```
+   yarn install
    ```
 
 ## Running the Application
@@ -34,18 +32,12 @@ To start the development server:
 ```
 npm run dev
 ```
-
-The application will be available at `http://localhost:5173`.
-
-## Running Storybook
-
-To start Storybook:
-
+or with Yarn:
 ```
-npm run storybook
+yarn dev
 ```
 
-Storybook will be available at `http://localhost:6006`.
+The application will be available at `http://localhost:5173` (or the port specified by Vite).
 
 ## Running Tests
 
@@ -54,38 +46,46 @@ To run tests:
 ```
 npm test
 ```
-
-To run tests in watch mode:
-
+or with Yarn:
 ```
-npm run test:watch
+yarn test
 ```
 
-## API Information
+## Running Storybook
 
-This application uses the [Fake Store API](https://fakestoreapi.com/) to fetch product data. The API provides mock data for an e-commerce website, including product information such as title, price, description, and image URLs.
+To start Storybook:
 
-Key endpoints used:
+```
+npm run storybook
+```
+or with Yarn:
+```
+yarn storybook
+```
 
-- `GET /products`: Fetch all products
-- `GET /products?limit=<number>`: Fetch a limited number of products
+Storybook will be available at `http://localhost:6006`.
 
-For more information about the API, visit the [Fake Store API documentation](https://fakestoreapi.com/docs).
+## Building for Production
+
+To create a production build:
+
+```
+npm run build
+```
+or with Yarn:
+```
+yarn build
+```
+
+The built files will be in the `dist` directory.
 
 ## Project Structure
 
-The project follows the Atomic Design methodology:
-
-- `src/components/atoms`: Basic building blocks (e.g., Input, ProductImage)
-- `src/components/molecules`: Combinations of atoms (e.g., AutocompleteInput)
-- `src/components/organisms`: Combinations of molecules and atoms (e.g., ResultsList)
-- `src/components/templates`: Page layouts
-- `src/styles`: Global styles and variables
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is open source and available under the [MIT License](LICENSE).
+- `/src`: Source code
+  - `/components`: React components
+  - `/context`: React context files
+  - `/services`: API services
+  - `/types`: TypeScript type definitions
+- `/public`: Static assets
+- `vite.config.ts`: Vite configuration
+- `tsconfig.json`: TypeScript configuration
