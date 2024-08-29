@@ -1,17 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useProductContext } from '../../../hooks/useProductContext'
-import { Product } from '../../../types/Product'
-import { Input } from '../../atoms/Input/Input'
-import { ProductImage } from '../../atoms/ProductImage/ProductImage'
-import { Toast } from '../../atoms/Toast/Toast'
-import './AutocompleteInput.scss'
+import React, { useEffect, useRef, useState } from 'react';
+import { useProductContext } from '../../../hooks/useProductContext';
+import { Product } from '../../../types/Product';
+import { Input } from '../../atoms/Input/Input';
+import { ProductImage } from '../../atoms/ProductImage/ProductImage';
+import { Toast } from '../../atoms/Toast/Toast';
+import './AutocompleteInput.scss';
 
 export const AutocompleteInput: React.FC = () => {
-  const [inputValue, setInputValue] = useState('')
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [selectedIndex, setSelectedIndex] = useState(-1)
-  const { products, searchProducts, setSelectedProducts, isLoading, error } = useProductContext()
-  const dropdownRef = useRef<HTMLUListElement>(null)
+  const [inputValue, setInputValue] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const { products, searchProducts, setSelectedProducts, isLoading, error } = useProductContext();
+  const dropdownRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     if (inputValue) {
@@ -21,46 +21,51 @@ export const AutocompleteInput: React.FC = () => {
       }, 300);
       return () => clearTimeout(debounceTimer);
     } else {
-      setShowDropdown(false)
+      setShowDropdown(false);
     }
-  }, [inputValue, searchProducts])
+  }, [inputValue, searchProducts]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
-    setSelectedIndex(-1)
-  }
+    setInputValue(e.target.value);
+    setSelectedIndex(-1);
+  };
 
-  const handleSelectProduct = (product: Product) => {
-    setSelectedProducts([product])
-    setInputValue('')  // Clear the input
-    setShowDropdown(false)  // Hide the dropdown
-  }
+  const handleSelectProduct = (product: Product | Product[]) => {
+    if (Array.isArray(product)) {
+      setSelectedProducts(product);
+    } else {
+      setSelectedProducts([product]);
+    }
+    setInputValue('');  // Clear the input value
+    setShowDropdown(false);  // Hide the dropdown
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setSelectedIndex(prev => (prev < products.length - 1 ? prev + 1 : prev))
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev < products.length - 1 ? prev + 1 : prev));
     } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setSelectedIndex(prev => (prev > -1 ? prev - 1 : -1))
+      e.preventDefault();
+      setSelectedIndex((prev) => (prev > -1 ? prev - 1 : -1));
     } else if (e.key === 'Enter') {
-      e.preventDefault()
+      e.preventDefault();
       if (selectedIndex >= 0 && selectedIndex < products.length) {
-        handleSelectProduct(products[selectedIndex])
-      } else if (products.length > 0) {
-        handleSelectProduct(products[0])
+        handleSelectProduct(products[selectedIndex]);
+      } else {
+        // Select all products if none are highlighted
+        handleSelectProduct(products);
       }
     } else if (e.key === 'Escape') {
-      setShowDropdown(false)
+      setShowDropdown(false);
     }
-  }
+  };
 
   const highlightMatch = (text: string, query: string) => {
-    const parts = text.split(new RegExp(`(${query})`, 'gi'))
+    const parts = text.split(new RegExp(`(${query})`, 'gi'));
     return parts.map((part, index) => 
       part.toLowerCase() === query.toLowerCase() ? <strong key={index}>{part}</strong> : part
-    )
-  }
+    );
+  };
 
   return (
     <div className="autocomplete-container">
@@ -70,25 +75,41 @@ export const AutocompleteInput: React.FC = () => {
         onKeyDown={handleKeyDown}
         placeholder="Search for products..."
       />
-      {isLoading && <div className="loading">Loading...</div>}
+      {isLoading && <div className="autocomplete-container__loading">Loading...</div>}
       {error && <Toast message={error} type="error" onClose={() => {}} />}
       {showDropdown && products.length > 0 && (
-        <ul className="dropdown" ref={dropdownRef}>
+        <ul className="autocomplete-container__dropdown" ref={dropdownRef}>
           {products.map((product, index) => (
             <li 
               key={product.id} 
+              className={`autocomplete-container__dropdown__item ${index === selectedIndex ? 'selected' : ''}`}
               onClick={() => handleSelectProduct(product)}
-              className={index === selectedIndex ? 'selected' : ''}
             >
-              <ProductImage src={product.image} alt={product.title} />
-              <div>
-                <span>{highlightMatch(product.title, inputValue)}</span>
-                <p>Price: ${product.price} | Category: {product.category}</p>
+              <div className="autocomplete-container__dropdown__item__image-wrapper">
+                <ProductImage src={product.image} alt={product.title} />
+              </div>
+              <div className="autocomplete-container__dropdown__item__content">
+                <span className="autocomplete-container__dropdown__item__content__title">
+                  {highlightMatch(product.title, inputValue)}
+                </span>
+                <p className="autocomplete-container__dropdown__item__content__details">
+                  <span className="autocomplete-container__dropdown__item__content__details__price">
+                    ${product.price}
+                  </span>
+                  <span className="autocomplete-container__dropdown__item__content__details__category">
+                    {product.category}
+                  </span>
+                </p>
               </div>
             </li>
           ))}
         </ul>
       )}
+      {!isLoading && products.length === 0 && showDropdown && (
+        <div className="autocomplete-container__dropdown__no-results">
+          No results for this search
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};

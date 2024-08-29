@@ -1,7 +1,7 @@
 import React from 'react'
 import { AutocompleteInput } from '../../molecules/AutocompleteInput/AutocompleteInput'
 import { ResultsList } from '../../organisms/ResultsList/ResultsList'
-import './ProductSearch.css'
+import './ProductSearch.scss'
 
 export const ProductSearch: React.FC = () => {
   return (

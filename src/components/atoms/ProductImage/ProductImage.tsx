@@ -1,9 +1,10 @@
-import React from 'react'
-import './ProductImage.scss'
+import React from 'react';
+import './ProductImage.scss';
 
 interface ProductImageProps {
   src: string
   alt: string
+  className?: string;
 }
 
 export const ProductImage: React.FC<ProductImageProps> = ({ src, alt }) => {
